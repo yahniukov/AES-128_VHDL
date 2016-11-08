@@ -195,7 +195,7 @@ begin
                reset => reset );
 
     -- After work - outstandings result
-    cypher_text <= result_register_bank when clock = '1';
+    cypher_text <= result_register_bank when clock = '1' and finish = '1';
     finish_round <= finish when clock = '1';
 
 end RTL;
