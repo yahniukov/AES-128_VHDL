@@ -39,7 +39,7 @@ architecture RTL of aes is
     --   1. preround_register_bank - zero round value;
     --   2. result_register_bank - register for result;
     --   3. intermediate_register_bank_for_input - result between first and last round for input;
-    --   3. intermediate_register_bank_for_output - result between first and last round for output;
+    --   4. intermediate_register_bank_for_output - result between first and last round for output;
     signal preround_register_bank                : std_logic_vector (DATA_LENGTH-1 downto 0);
     signal result_register_bank                  : std_logic_vector (DATA_LENGTH-1 downto 0);
     signal intermediate_register_bank_for_input  : std_logic_vector (DATA_LENGTH-1 downto 0);
@@ -67,9 +67,10 @@ architecture RTL of aes is
                plain_text : in STD_LOGIC_VECTOR (DATA_LENGTH-1 downto 0);
                key        : in STD_LOGIC_VECTOR (DATA_LENGTH-1 downto 0);
                
-               clock       : in STD_LOGIC;
-               reset       : in STD_LOGIC;
-               start_round : in STD_LOGIC);
+               clock         : in STD_LOGIC;
+               reset         : in STD_LOGIC;
+               start_round   : in STD_LOGIC;
+               current_round : in integer range 0 to 11);
     end component;
     
     component Decryption_Module is
@@ -108,7 +109,8 @@ begin
                key => current_key,
                clock => clock,
                reset => reset,
-               start_round => start_encryption_module);
+               start_round => start_encryption_module,
+               current_round => round);
     
     encrypt_process : process(clock, start_encryption, encryption_decryption) 
     begin
@@ -122,6 +124,7 @@ begin
                     elsif(round = 10) then
                         round <= round + 1;
                         result_register_bank <= intermediate_register_bank_for_output;
+                        finish <= '1';
                         start_encryption_module <= '0';
                     else 
                         if(finish_encryption_module = '1') then
