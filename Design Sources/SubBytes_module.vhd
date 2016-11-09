@@ -79,7 +79,22 @@ begin
         if(rising_edge(reset)) then
             bytes_memory_in(BYTES_COUNT-1 downto 0) <= (others => '0');
             start_sbox_module <= '0';
-            finish_sbox_module <= '0';
+            finish_sbox_module_0 <= '0';
+            finish_sbox_module_1 <= '0';
+            finish_sbox_module_2 <= '0';
+            finish_sbox_module_3 <= '0';
+            finish_sbox_module_4 <= '0';
+            finish_sbox_module_5 <= '0';
+            finish_sbox_module_6 <= '0';
+            finish_sbox_module_7 <= '0';
+            finish_sbox_module_8 <= '0';
+            finish_sbox_module_9 <= '0';
+            finish_sbox_module_10 <= '0';
+            finish_sbox_module_11 <= '0';
+            finish_sbox_module_12 <= '0';
+            finish_sbox_module_13 <= '0';
+            finish_sbox_module_14 <= '0';
+            finish_sbox_module_15 <= '0';
         end if;
     end process reset_n_init_process;
     
