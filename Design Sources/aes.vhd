@@ -3,7 +3,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity aes is
-    Generic ( DATA_LENGTH : integer := 128 );
+    Generic ( DATA_LENGTH : integer := 128;
+              COUNT_ROUND : integer := 10  
+              );
     Port ( out_data : out STD_LOGIC_VECTOR ( DATA_LENGTH-1 downto 0);
            finish   : out STD_LOGIC;
     
@@ -27,7 +29,7 @@ architecture RTL of aes is
     -----------------------------
     
     -- Value of current round
-    signal round : integer range 0 to 11;
+    signal round : integer;
     
     -- Current key
     signal current_key : std_logic_vector (DATA_LENGTH-1 downto 0);
@@ -89,7 +91,8 @@ begin
             current_key <= (others => '0');
             preround_register_bank <= (others => '0');
             result_register_bank <= (others => '0');
-            intermediate_register_bank <= (others => '0');
+            intermediate_register_bank_for_input <= (others => '0');
+            intermediate_register_bank_for_output <= (others => '0');
             start_encryption_module <= '0';
             start_decryption_module <= '0';
             start_key_expansion_module <= '0';
@@ -113,10 +116,11 @@ begin
                current_round => round);
     
     encrypt_process : process(clock, start_encryption, encryption_decryption) 
+        variable i : integer;
     begin
         if(rising_edge(start_encryption) and encryption_decryption = '1') then
-            while round /= 11 loop
-                if(rising_edge(clock)) then
+            for i in 0 to 15 loop
+                if(clock = '1') then 
                     if(round = 0) then
                         round <= round + 1;
                         intermediate_register_bank_for_input <= preround_register_bank;
@@ -126,6 +130,7 @@ begin
                         result_register_bank <= intermediate_register_bank_for_output;
                         finish <= '1';
                         start_encryption_module <= '0';
+                        exit;
                     else 
                         if(finish_encryption_module = '1') then
                             round <= round + 1;

@@ -77,7 +77,7 @@ begin
     reset_n_init_process : process(reset)
     begin
         if(rising_edge(reset)) then
-            bytes_memory_in(BYTES_COUNT-1 downto 0) <= (others => '0');
+            bytes_memory_in(BYTES_COUNT-1 downto 0) <= (others => X"0");
             start_sbox_module <= '0';
             finish_sbox_module_0 <= '0';
             finish_sbox_module_1 <= '0';

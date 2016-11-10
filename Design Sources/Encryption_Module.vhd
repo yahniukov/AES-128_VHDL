@@ -24,7 +24,7 @@ architecture RTL of Encryption_Module is
     -----------------------------
     
     -- Signal that store current round
-    signal round : integer range 0 to 11;
+    signal round : integer;
     
     -- Signal that module done work
     signal finish : std_logic;
@@ -151,15 +151,15 @@ begin
     start_shiftrows_module <= finish_subbytes_module when clock = '1';
     
     to_mixcolumns_module <= from_shiftrows_module when clock = '1';
-    start_mixcloumns_module <= finish_shiftrows_module when clock = '1';
+    start_mixcolumns_module <= finish_shiftrows_module when clock = '1';
     
     to_addroundkey_module <= from_shiftrows_module when (round = 10 and clock = '1')  
                              else from_mixcolumns_module when clock = '1';
-    start_addround_module <= finish_shiftrows_module when (round = 10 and clock = '1')
+    start_addroundkey_module <= finish_shiftrows_module when (round = 10 and clock = '1')
                              else finish_mixcolumns_module when clock = '1';
     
     result_register_bank <= from_addroundkey_module when clock = '1';
-    finish <= finish_addround_key when clock = '1';
+    finish <= finish_addroundkey_module when clock = '1';
     
     SubBytes_module_1 : SubBytes_module 
     port map ( data_out => from_subbytes_module,

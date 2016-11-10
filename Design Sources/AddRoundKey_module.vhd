@@ -19,7 +19,7 @@ architecture RTL of AddRoundKey_module is
 
 begin
 
-    xored : process
+    xored : process(start)
     begin
         if(rising_edge(start) and clock = '1') then
             data_out <= data_in xor key;
